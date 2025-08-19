@@ -1,0 +1,11 @@
+# Eza
+alias ls="eza --icons --git"
+alias ll="eza -l --icons --git"
+alias la="eza -l --icons --git -a"
+alias llt="eza --tree --level=2 --long --icons --git"
+
+# Nvim
+alias vim=nvim
+
+# Lazygit
+alias lz=lazygit
