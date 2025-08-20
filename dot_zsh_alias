@@ -1,0 +1,73 @@
+# Eza
+alias ls="eza --icons=auto --git"
+alias ll="eza -l --icons=auto"
+alias la="eza -l --icons=auto -a"
+alias llt="eza --tree --level=2 --long --icons=auto"
+# Git is slow
+# alias ll="eza -l --icons --git"
+# alias la="eza -l --icons --git -a"
+# alias llt="eza --tree --level=2 --long --icons --git"
+
+# Nvim
+alias vim=nvim
+
+# Lazygit
+alias lz=lazygit
+
+# Ripgrep
+alias grep=rg
+
+# Git helper functions
+function gsync() {
+  this_branch=$(git symbolic-ref --short -q HEAD)
+  echo "[gsync] This branch is = ${this_branch}. Doing a pull rebase on master, followed by rebasing this branch on master..."
+  git checkout master &&
+  git fetch &&
+  git pull --rebase &&
+  git submodule update --init --recursive &&
+  git checkout ${this_branch} &&
+  git rebase master
+}
+
+function gpush() {
+  this_branch=$(git symbolic-ref --short -q HEAD)
+  echo "[git push] Executing: git push --force origin $this_branch"
+  git push --force origin $this_branch
+}
+
+function venv() {
+  git_dir=$(git rev-parse --show-toplevel)
+  echo "[source virtual env] Executing: source $git_dir/bin/py3_virtual_env/bin/activate"
+  source $git_dir/bin/py3_virtual_env/bin/activate
+}
+
+function gbdel() {
+  echo "Switching to branch master and deleting other branches"
+  git switch master
+  git branch | grep -v "master" | xargs git branch -D
+}
+
+function gbnew() {
+  if [ $# -lt 1 ]
+  then
+    echo "Usage: $funcstack[1] <branch-suffix>"
+    return
+  fi
+
+  new_branch="personal/brandon/$1_$(date +%Y_%m_%d)"
+  git checkout -b $new_branch
+}
+
+function update() {
+  if [ $# -lt 1 ]
+  then
+    echo "Usage: $funcstack[1] <branch-name>"
+    return
+  fi
+
+  this_branch=$(git symbolic-ref --short -q HEAD)
+  git switch $1 &&
+  gsync &&
+  gpush &&
+  git switch $this_branch
+}
