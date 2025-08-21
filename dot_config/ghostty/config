@@ -40,7 +40,7 @@ scrollback-limit               = 4200
 shell-integration              = zsh
 
 working-directory = home
-window-inherit-working-directory = false
+window-inherit-working-directory = true
 
 # keymaps
 keybind = global:cmd+`=toggle_quick_terminal
